@@ -21,9 +21,9 @@ namespace CRUD
 	{
 		public Editor()
 		{
+			InitializeComponent();
 			DataContext = new Artikal();
 			BindingGroup = new BindingGroup();
-			InitializeComponent();
 		}
 
 		private void OK(object sender, RoutedEventArgs e)

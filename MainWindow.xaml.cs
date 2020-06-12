@@ -21,14 +21,34 @@ namespace CRUD
 	/// </summary>
 	public partial class MainWindow : Window
 	{
-		ObservableCollection<Artikal> listaArt = new ObservableCollection<Artikal>();
+		//ObservableCollection<Artikal> listaArt = new ObservableCollection<Artikal>();
+		EF baza = new EF();
+
+		private string _pretraga;
+		public string Pretraga 
+		{ 
+			get => _pretraga; 
+			set
+			{
+				_pretraga = value;
+
+				if (string.IsNullOrWhiteSpace(_pretraga))
+				{
+					dg.ItemsSource = baza.Artikals.ToList();
+				}
+				else
+				{
+					dg.ItemsSource =
+						baza.Artikals.Where(a => a.Naziv.Contains(_pretraga.Trim())).ToList();
+				}
+			} 
+		}
 
 		public MainWindow()
 		{
 			InitializeComponent();
-
-			dg.ItemsSource = listaArt;
-
+			DataContext = this;
+			dg.ItemsSource = baza.Artikals.ToList();
 		}
 
 		private void Dodavanje(object sender, RoutedEventArgs e)
@@ -38,7 +58,32 @@ namespace CRUD
 
 			if (ee.ShowDialog() == true) 
 			{
-				listaArt.Add(ee.DataContext as Artikal);
+				baza.Artikals.Add(ee.DataContext as Artikal);
+				baza.SaveChanges();
+				dg.ItemsSource = baza.Artikals.ToList(); 
+			}
+		}
+
+		private void Izmena(object sender, RoutedEventArgs e)
+		{
+			//TODO Commanding 
+			if (dg.SelectedItem != null)
+			{
+				Editor ed = new Editor();
+				ed.Owner = this;
+				ed.DataContext = dg.SelectedItem;
+				ed.ShowDialog();
+				baza.SaveChanges();
+			}
+		}
+
+		private void Brisanje(object sender, RoutedEventArgs e)
+		{
+			if (dg.SelectedItem != null)
+			{
+				baza.Artikals.Remove(dg.SelectedItem as Artikal);
+				baza.SaveChanges();
+				dg.ItemsSource = baza.Artikals.ToList();
 			}
 		}
 	}

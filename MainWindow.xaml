@@ -7,8 +7,11 @@
         mc:Ignorable="d"
         Title="MainWindow" Height="450" Width="800">
 	<DockPanel>
+		<TextBox Text="{Binding Pretraga, UpdateSourceTrigger=PropertyChanged}" DockPanel.Dock="Top"/>
 		<StackPanel DockPanel.Dock="Right" VerticalAlignment="Center">
 			<Button Content="Dodaj" Click="Dodavanje"/>
+			<Button Content="Izmeni" Click="Izmena"/>
+			<Button Content="Brisanje" Click="Brisanje"/>
 		</StackPanel>
 		<DataGrid Name="dg" IsReadOnly="True" ColumnWidth="*"/>
 	</DockPanel>
